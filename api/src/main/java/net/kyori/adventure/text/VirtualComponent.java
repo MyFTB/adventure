@@ -21,34 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.adventure.text.minimessage.tag.standard;
+package net.kyori.adventure.text;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.AbstractTest;
-import org.junit.jupiter.api.Test;
+import org.jetbrains.annotations.NotNull;
 
-import static net.kyori.adventure.text.Component.empty;
-import static net.kyori.adventure.text.Component.text;
-import static net.kyori.adventure.text.Component.textOfChildren;
-import static net.kyori.adventure.text.format.NamedTextColor.YELLOW;
-import static net.kyori.adventure.text.format.TextColor.color;
+/**
+ * A virtual component.
+ *
+ * <p>This component type is transient, and not guaranteed to survive during any sort of transformations or serialization.</p>
+ *
+ * @since 4.14.0
+ */
+public interface VirtualComponent extends TextComponent {
+  /**
+   * Gets the renderer context type.
+   *
+   * @return the renderer context type
+   * @since 4.14.0
+   */
+  @NotNull Class<?> contextType();
 
-class ResetTagTest extends AbstractTest {
-  @Test
-  void testReset() {
-    final String input = "Click <yellow><insert:test>this<rainbow> wooo<reset> to insert!";
-    final Component expected = text("Click ")
-      .append(empty().color(YELLOW).insertion("test")
-        .append(text("this"))
-        .append(virtualOfChildren(textOfChildren(
-          text(" ", color(0xff0000)),
-          text("w", color(0xcbff00)),
-          text("o", color(0x00ff66)),
-          text("o", color(0x0065ff)),
-          text("o", color(0xcc00ff))
-        )))
-      ).append(text(" to insert!"));
-
-    this.assertParsedEquals(expected, input);
-  }
+  /**
+   * Gets the renderer.
+   *
+   * @return the renderer
+   * @since 4.14.0
+   */
+  @NotNull VirtualComponentRenderer<?> renderer();
 }

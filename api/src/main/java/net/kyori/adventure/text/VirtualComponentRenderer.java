@@ -21,34 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.kyori.adventure.text.minimessage.tag.standard;
+package net.kyori.adventure.text;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.AbstractTest;
-import org.junit.jupiter.api.Test;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.UnknownNullability;
 
-import static net.kyori.adventure.text.Component.empty;
-import static net.kyori.adventure.text.Component.text;
-import static net.kyori.adventure.text.Component.textOfChildren;
-import static net.kyori.adventure.text.format.NamedTextColor.YELLOW;
-import static net.kyori.adventure.text.format.TextColor.color;
+/**
+ * A holder for a value.
+ *
+ * @param <C> the context type
+ * @since 4.14.0
+ */
+public interface VirtualComponentRenderer<C> {
+  /**
+   * Gets the value by rendering using {@code context}.
+   *
+   * @param context the context
+   * @return the rendered value
+   * @since 4.14.0
+   */
+  @UnknownNullability ComponentLike apply(final @NotNull C context);
 
-class ResetTagTest extends AbstractTest {
-  @Test
-  void testReset() {
-    final String input = "Click <yellow><insert:test>this<rainbow> wooo<reset> to insert!";
-    final Component expected = text("Click ")
-      .append(empty().color(YELLOW).insertion("test")
-        .append(text("this"))
-        .append(virtualOfChildren(textOfChildren(
-          text(" ", color(0xff0000)),
-          text("w", color(0xcbff00)),
-          text("o", color(0x00ff66)),
-          text("o", color(0x0065ff)),
-          text("o", color(0xcc00ff))
-        )))
-      ).append(text(" to insert!"));
-
-    this.assertParsedEquals(expected, input);
+  /**
+   * Get a fallback value for when this component has been serialized without being rendered.
+   *
+   * <p>By default, this will be an empty string.</p>
+   *
+   * @return the fallback string
+   * @since 4.14.0
+   */
+  default @NotNull String fallbackString() {
+    return "";
   }
 }
